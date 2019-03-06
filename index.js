@@ -7,7 +7,7 @@ const AWS = require('aws-sdk')
 const app = express();
 
 const USERS_TABLE = process.env.USERS_TABLE;
-
+console.log()
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
 app.use(bodyParser.json({ strict : false }));
@@ -24,7 +24,7 @@ app.get("/user/:email",(req,res)=>{
     const params = {
         TableName : USERS_TABLE,
         key : {
-            emailID : req.params.email
+            email : req.params.email
         }
     };
 
@@ -35,8 +35,8 @@ app.get("/user/:email",(req,res)=>{
                 res.status(400).send({error: "Could not get User"});
             }
             if(result.Item){
-                const {emailID,firstname,lastname} = result.Item;
-                res.status(200).status({ email : emailID, firstname, lastname });
+                const {email,firstname,lastname} = result.Item;
+                res.status(200).status({ email, firstname, lastname });
             }else{
                 res.status(400).send({error : "could not get user"});
             }
@@ -60,7 +60,7 @@ app.post("/user",(req,res)=>{
     const params = {
         TableName : USERS_TABLE,
         Item : {
-            emailID : email,
+            email : email,
             firstName : firstname,
             lastName : lastname,
             password : password
